@@ -6,10 +6,11 @@
     "homepage": "https://github.com/y0zh/tron-api",
 
     "require": {
+        "php": "^7.4",
         "comely-io/data-types": "^1.0",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.0",
         "iexbase/web3.php": "^2.0.1",
-        "kornrunner/secp256k1": "^0.2",
+        "kornrunner/secp256k1": "^0.1.2",
         "simplito/elliptic-php": "^1.0",
         "ext-json": "*",
         "ext-bcmath": "*"
