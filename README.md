@@ -10,7 +10,7 @@ A PHP API for interacting with the Tron Protocol
 ## Install
 
 ```bash
-> composer require iexbase/tron-api --ignore-platform-reqs
+> composer require y0zh/tron-api --ignore-platform-reqs
 ```
 ## Requirements
 
