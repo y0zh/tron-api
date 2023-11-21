@@ -15,16 +15,16 @@ The following versions of PHP are supported by this version.
 ## Example Usage
 
 ```php
-use y0zh\TronAPI\Tron;
+use IEXBase\TronAPI\Tron;
 
-$fullNode = new \y0zh\TronAPI\Provider\HttpProvider('https://api.trongrid.io');
-$solidityNode = new \y0zh\TronAPI\Provider\HttpProvider('https://api.trongrid.io');
-$eventServer = new \y0zh\TronAPI\Provider\HttpProvider('https://api.trongrid.io');
+$fullNode = new \IEXBase\TronAPI\Provider\HttpProvider('https://api.trongrid.io');
+$solidityNode = new \IEXBase\TronAPI\Provider\HttpProvider('https://api.trongrid.io');
+$eventServer = new \IEXBase\TronAPI\Provider\HttpProvider('https://api.trongrid.io');
 
 try {
-    $tron = new \y0zh\TronAPI\Tron($fullNode, $solidityNode, $eventServer);
+    $tron = new \IEXBase\TronAPI\Tron($fullNode, $solidityNode, $eventServer);
 }
-catch (\y0zh\TronAPI\Exception\TronException $e) {
+catch (\IEXBase\TronAPI\Exception\TronException $e) {
     exit($e->getMessage());
 }
 
