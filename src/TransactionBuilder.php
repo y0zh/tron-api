@@ -252,34 +252,35 @@ class TransactionBuilder
      * Will give bandwidth OR Energy and TRON Power(voting rights) to the owner of the frozen tokens.
      *
      * @param float $amount
-     * @param int $duration
      * @param string $resource
      * @param string|null $address
+     * @param int $duration
      * @return array
      * @throws TronException
      */
-    public function freezeBalance(float $amount = 0, int $duration = 3, string $resource = 'BANDWIDTH', string $address = null)
+    public function freezeBalance( float $amount = 0, string $resource = 'BANDWIDTH', string $address = null, int $duration = 3 )
     {
-        if(empty($address))
+        if ( empty($address) ) {
             throw new TronException('Address not specified');
+	}		
 
-        if (!in_array($resource, ['BANDWIDTH', 'ENERGY'])) {
+        if ( ! in_array($resource, ['BANDWIDTH', 'ENERGY']) ) {
             throw new TronException('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
         }
 
-        if (!is_float($amount)) {
+        if ( ! is_float($amount) ) {
             throw new TronException('Invalid amount provided');
         }
 
-        if(!is_integer($duration) and $duration < 3) {
+        if ( ! is_integer($duration) and $duration < 3 ) {
             throw new TronException('Invalid duration provided, minimum of 3 days');
         }
 
         return $this->tron->getManager()->request('wallet/freezebalancev2', [
-            'owner_address' => $this->tron->address2HexString($address),
-            'frozen_balance' => $this->tron->toTron($amount),
-            'frozen_duration' => $duration,
-            'resource' => $resource
+            'owner_address' 	=> $this->tron->address2HexString( $address ),
+            'frozen_balance' 	=> $this->tron->toTron( $amount ),
+            'frozen_duration'	=> $duration,
+            'resource' 		=> $resource
         ]);
     }
 
@@ -288,23 +289,41 @@ class TransactionBuilder
      * Unfreezing will remove bandwidth and TRON Power.
      *
      * @param string $resource
-     * @param string $owner_address
+     * @param string|null $owner_address
+     * @param float $amount
      * @return array
      * @throws TronException
      */
-    public function unfreezeBalance(string $resource = 'BANDWIDTH', string $owner_address = null)
+    public function unfreezeBalance( string $resource = 'BANDWIDTH', string $owner_address = null, float $amount = 0 )
     {
-        if(is_null($owner_address)) {
+        if ( is_null($owner_address) ) {
             throw new TronException('Owner Address not specified');
         }
 
-        if (!in_array($resource, ['BANDWIDTH', 'ENERGY'])) {
+        if ( ! in_array($resource, ['BANDWIDTH', 'ENERGY']) ) {
             throw new TronException('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
         }
 
         return $this->tron->getManager()->request('wallet/unfreezebalancev2', [
-            'owner_address' =>  $this->tron->address2HexString($owner_address),
-            'resource' => $resource
+            'owner_address'     =>  $this->tron->address2HexString( $owner_address ),
+            'resource'          =>  $resource,
+            'unfreeze_balance'  =>  $this->tron->toTron( $amount )
+        ]);
+    }
+
+    /**
+     * @param string|null $owner_address
+     * @return array
+     * @throws TronException
+     */
+    public function withdrawExpireUnfreeze( string $owner_address = null )
+    {
+        if ( is_null( $owner_address ) ) {
+            throw new TronException('Owner Address not specified');
+        }
+
+        return $this->tron->getManager()->request('wallet/withdrawexpireunfreeze', [
+            'owner_address' => $this->tron->address2HexString( $owner_address )
         ]);
     }
 
