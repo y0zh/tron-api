@@ -1405,4 +1405,119 @@ class Tron implements TronInterface
             'value' =>  $token_id
         ]);
     }
+
+    
+    /**
+     * @param string $owner_address
+     * @param string $receiver_address
+     * @param int $balance
+     * @param string $resource
+     * @param bool $lock
+     * @param int|null $lock_period
+     * @return array
+     * @throws TronException
+     */
+    public function delegateResource(
+        string $owner_address,
+        string $receiver_address,
+        int $balance=1,
+        string $resource='BANDWIDTH',
+        bool $lock=false,
+        int $lock_period=null
+    )
+    {
+        if ( $owner_address == null ) {
+            $owner_address = $this->address['hex'];
+        }
+
+        if ( empty( $receiver_address ) ) {
+            throw new TronException('Invalid receiver_address');
+        }
+
+        if ( ! is_integer( $balance ) || $balance < 1 ) {
+            throw new TronException('Invalid balance');
+        }
+
+        $balance = $balance * TRC20Contract::TRX_TO_SUN;
+
+
+        $delegate           = $this->transactionBuilder->delegateResource( $owner_address, $receiver_address, $balance, $resource, $lock, $lock_period );
+        $signedTransaction  = $this->signTransaction( $delegate );
+        $response           = $this->sendRawTransaction( $signedTransaction );
+
+        return array_merge( $response, $signedTransaction );
+    }
+
+
+    /**
+     * @param string $owner_address
+     * @param string $receiver_address
+     * @param int $balance
+     * @param string $resource
+     * @return array
+     * @throws TronException
+     */
+    public function unDelegateResource( string $owner_address, string $receiver_address, int $balance=1, string $resource='BANDWIDTH' )
+    {
+        if ( $owner_address == null ) {
+            $owner_address = $this->address['hex'];
+        }
+
+        if ( empty( $receiver_address ) ) {
+            throw new TronException('Invalid receiver_address');
+        }
+
+        if ( ! is_integer( $balance ) || $balance < 1 ) {
+            throw new TronException('Invalid balance');
+        }
+
+        $balance = $balance * TRC20Contract::TRX_TO_SUN;
+
+
+        $unDelegate         = $this->transactionBuilder->unDelegateResource( $owner_address, $receiver_address, $balance, $resource );
+        $signedTransaction  = $this->signTransaction( $unDelegate );
+        $response           = $this->sendRawTransaction( $signedTransaction );
+
+        return array_merge( $response, $signedTransaction );
+    }
+
+
+    /**
+     * @param string $fromAddress
+     * @param string $toAddress
+     * @return array
+     * @throws TronException
+     */
+    public function getDelegateResource( string $fromAddress, string $toAddress )
+    {
+        if ( empty( $fromAddress ) ) {
+            throw new TronException('Invalid fromAddress');
+        }
+
+        if ( empty( $toAddress ) ) {
+            throw new TronException('Invalid toAddress');
+        }
+
+        return $this->manager->request('/wallet/getdelegatedresourcev2', [
+            'fromAddress' => $this->address2HexString( $fromAddress ),
+            'toAddress'   => $this->address2HexString( $toAddress ),
+        ]);
+    }
+    
+    
+    /**
+     * @param string $address
+     * @return array
+     * @throws TronException
+     */
+    public function getDelegatedResourceAccountIndex( string $address )
+    {
+        if ( empty( $address ) ) {
+            throw new TronException('Invalid address');
+        }
+
+        return $this->manager->request('/wallet/getdelegatedresourceaccountindexv2', [
+            'value' => $this->address2HexString( $address ),
+        ]);
+    }
 }
