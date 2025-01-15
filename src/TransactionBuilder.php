@@ -632,4 +632,71 @@ return $trc20;
 
         throw new TronException('Failed to execute. Error:'.$message);
     }
+
+     /**
+     * @param string $owner_address
+     * @param string $receiver_address
+     * @param int $balance
+     * @param string $resource
+     * @param bool $lock
+     * @param int|null $lock_period
+     * @return array
+     * @throws TronException
+     */
+    public function delegateResource( string $owner_address,
+                                      string $receiver_address,
+                                      int $balance=1,
+                                      string $resource='BANDWIDTH',
+                                      bool $lock=false,
+                                      int $lock_period=null
+    )
+    {
+        if ( empty( $owner_address ) ) {
+            throw new TronException('Address not specified');
+        }
+
+        if ( ! in_array($resource, ['BANDWIDTH', 'ENERGY']) ) {
+            throw new TronException('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
+        }
+
+        if ( $lock && $lock_period == null ) {
+            throw new TronException('Lock period not specified');
+        }
+        
+        return $this->tron->getManager()->request('wallet/delegateresource', [
+            'owner_address' 	=> $this->tron->address2HexString( $address ),
+            'receiver_address' 	=> $this->tron->address2HexString( $receiver_address ),
+            'resource' 		    => $resource,
+            'balance'           => $balance,
+            'lock'              => $lock,
+            'lock_period'       => $lock_period,
+        ]);
+    }
+
+
+    /**
+     * @param string $owner_address
+     * @param string $receiver_address
+     * @param int $balance
+     * @param string $resource
+     * @return array
+     * @throws TronException
+     */
+    public function unDelegateResource( string $owner_address, string $receiver_address, int $balance=1, string $resource='BANDWIDTH' )
+    {
+        if ( empty( $owner_address ) ) {
+            throw new TronException('Address not specified');
+        }
+
+        if ( ! in_array($resource, ['BANDWIDTH', 'ENERGY']) ) {
+            throw new TronException('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
+        }
+
+        return $this->tron->getManager()->request('wallet/undelegateresource', [
+            'owner_address' 	=> $this->tron->address2HexString( $address ),
+            'receiver_address' 	=> $this->tron->address2HexString( $receiver_address ),
+            'resource' 		    => $resource,
+            'balance'           => $balance,
+        ]);
+    }
 }
