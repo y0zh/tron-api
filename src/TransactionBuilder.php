@@ -655,7 +655,7 @@ return $trc20;
             throw new TronException('Address not specified');
         }
 
-        if ( ! in_array($resource, ['BANDWIDTH', 'ENERGY']) ) {
+        if ( ! in_array( $resource, ['BANDWIDTH', 'ENERGY'] ) ) {
             throw new TronException('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
         }
 
@@ -664,9 +664,9 @@ return $trc20;
         }
         
         return $this->tron->getManager()->request('wallet/delegateresource', [
-            'owner_address' 	=> $this->tron->address2HexString( $address ),
+            'owner_address' 	=> $this->tron->address2HexString( $owner_address ),
             'receiver_address' 	=> $this->tron->address2HexString( $receiver_address ),
-            'resource' 		    => $resource,
+            'resource' 		=> $resource,
             'balance'           => $balance,
             'lock'              => $lock,
             'lock_period'       => $lock_period,
@@ -688,14 +688,14 @@ return $trc20;
             throw new TronException('Address not specified');
         }
 
-        if ( ! in_array($resource, ['BANDWIDTH', 'ENERGY']) ) {
+        if ( ! in_array( $resource, ['BANDWIDTH', 'ENERGY'] ) ) {
             throw new TronException('Invalid resource provided: Expected "BANDWIDTH" or "ENERGY"');
         }
 
         return $this->tron->getManager()->request('wallet/undelegateresource', [
-            'owner_address' 	=> $this->tron->address2HexString( $address ),
+            'owner_address' 	=> $this->tron->address2HexString( $owner_address ),
             'receiver_address' 	=> $this->tron->address2HexString( $receiver_address ),
-            'resource' 		    => $resource,
+            'resource' 		=> $resource,
             'balance'           => $balance,
         ]);
     }
